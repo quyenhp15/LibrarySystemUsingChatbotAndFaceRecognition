@@ -1,3 +1,4 @@
+from unittest import result
 import face_recognition
 import cv2
 import os
@@ -60,11 +61,23 @@ class SimpleFacerec:
 
             # Or instead, use the known face with the smallest distance to the new face
             face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
+            Result = list(face_distances <= 0.5)
+            
+            # worst_match_index = np.argmax(face_distances)
             best_match_index = np.argmin(face_distances)
-            if matches[best_match_index]:
-                name = self.known_face_names[best_match_index]
+            
+            if True in Result:
+                name = self.known_face_names[best_match_index] + "True"
+            else:
+                name = "unknown"
+            
+            # if matches[worst_match_index] == False:
+            #     name = self.known_face_names[best_match_index] + ' False '
+            # elif matches[worst_match_index] == True:
+            #     name = self.known_face_names[worst_match_index] + 'True'
+                
             face_names.append(name)
-
+            
         # Convert to numpy array to adjust coordinates with frame resizing quickly
         face_locations = np.array(face_locations)
         face_locations = face_locations / self.frame_resizing
